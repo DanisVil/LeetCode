@@ -10,26 +10,29 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            Solution.LongestDiverseString(1, 1, 7);
+            Solution.TriangleNumber(new int[] { 2, 2, 3, 4});
         }
     }
     public static class Solution
     {
-        public static string generate(int a, int b, int c, char aa, char bb, char cc)
+        public static int TriangleNumber(int[] nums)
         {
-            if (a < b)
-                return generate(b, a, c, bb, aa, cc);
-            if (b < c)
-                return generate(a, c, b, aa, cc, bb);
-            if (b == 0)
-                return new string(aa, Math.Min(2, a));
-            int use_a = Math.Min(2, a), use_b = (a - use_a) >= b ? 1 : 0;
-            return new string(aa, use_a) + new string(bb, use_b) +
-                generate(a - use_a, b - use_b, c, aa, bb, cc);
-        }
-        public static string LongestDiverseString(int a, int b, int c)
-        {
-            return generate(a, b, c, 'a', 'b', 'c');
+            Array.Sort(nums);
+            int count = 0, n = nums.Length;
+            for (int i = n - 1; i >= 2; i--)
+            {
+                int l = 0, r = i - 1;
+                while (l < r)
+                {
+                    if (nums[l] + nums[r] > nums[i])
+                    {
+                        count += r - l;
+                        r--;
+                    }
+                    else l++;
+                }
+            }
+            return count;
         }
     }
 }
