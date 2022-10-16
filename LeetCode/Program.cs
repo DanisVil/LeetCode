@@ -10,30 +10,26 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            int[][] points = new int[][] { new int[] { 8, 7 }, new int[] { 9, 9 }, new int[] { 7, 4 }, new int[] { 9, 7 }, new int[] { -3, 7 }, new int[] { 2, 7 } };
-            Solution.MaxWidthOfVerticalArea(points);
-            Console.ReadKey();
+            Solution.LongestDiverseString(1, 1, 7);
         }
     }
     public static class Solution
     {
-        public static int MaxWidthOfVerticalArea(int[][] points)
+        public static string generate(int a, int b, int c, char aa, char bb, char cc)
         {
-            IComparer<int[]> myComparer = new MyComparer();
-            Array.Sort(points, myComparer);
-            int maxWidth = 0;
-            for (int i = 0; i < points.Length - 1; i++)
-            {
-                if (points[i + 1][0] - points[i][0] > maxWidth) maxWidth = points[i + 1][0] - points[i][0];
-            }
-            return maxWidth;
+            if (a < b)
+                return generate(b, a, c, bb, aa, cc);
+            if (b < c)
+                return generate(a, c, b, aa, cc, bb);
+            if (b == 0)
+                return new string(aa, Math.Min(2, a));
+            int use_a = Math.Min(2, a), use_b = (a - use_a) >= b ? 1 : 0;
+            return new string(aa, use_a) + new string(bb, use_b) +
+                generate(a - use_a, b - use_b, c, aa, bb, cc);
         }
-    }
-    public class MyComparer : IComparer<int[]>
-    {
-        int IComparer<int[]>.Compare(int[] p1, int[] p2)
+        public static string LongestDiverseString(int a, int b, int c)
         {
-            return p1[0] - p2[0];
+            return generate(a, b, c, 'a', 'b', 'c');
         }
     }
 }
