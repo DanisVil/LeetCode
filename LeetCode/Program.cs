@@ -10,29 +10,24 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            Solution.TriangleNumber(new int[] { 2, 2, 3, 4});
         }
     }
     public static class Solution
     {
-        public static int TriangleNumber(int[] nums)
+        public static int[][] Insert(int[][] intervals, int[] newInterval)
         {
-            Array.Sort(nums);
-            int count = 0, n = nums.Length;
-            for (int i = n - 1; i >= 2; i--)
+            List<int[]> processed = new List<int[]>();
+            int i = 0;
+            while (i < intervals.Length && intervals[i][1] < newInterval[0])
+                processed.Add(intervals[i++]);
+            while (i < intervals.Length && intervals[i][0] <= newInterval[1])
             {
-                int l = 0, r = i - 1;
-                while (l < r)
-                {
-                    if (nums[l] + nums[r] > nums[i])
-                    {
-                        count += r - l;
-                        r--;
-                    }
-                    else l++;
-                }
+                newInterval = new int[] { Math.Min(newInterval[0], intervals[i][0]), Math.Max(newInterval[1], intervals[i][1]) };
+                i++;
             }
-            return count;
+            processed.Add(newInterval);
+            while (i < intervals.Length) processed.Add(intervals[i++]);
+            return processed.ToArray();
         }
     }
 }
