@@ -10,25 +10,30 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
+            int[][] points = new int[][] { new int[] { 8, 7 }, new int[] { 9, 9 }, new int[] { 7, 4 }, new int[] { 9, 7 }, new int[] { -3, 7 }, new int[] { 2, 7 } };
+            Solution.MaxWidthOfVerticalArea(points);
+            Console.ReadKey();
         }
     }
-    public class Solution
+    public static class Solution
     {
-        public IList<string> GenerateParenthesis(int n)
+        public static int MaxWidthOfVerticalArea(int[][] points)
         {
-            List<string> list = new List<string>();
-            backtrack(list, "", 0, 0, n);
-            return list;
-        }
-        private void backtrack(List<string> list, string str, int open, int close, int max)
-        {
-            if (str.Length == max * 2)
+            IComparer<int[]> myComparer = new MyComparer();
+            Array.Sort(points, myComparer);
+            int maxWidth = 0;
+            for (int i = 0; i < points.Length - 1; i++)
             {
-                list.Add(str);
-                return;
+                if (points[i + 1][0] - points[i][0] > maxWidth) maxWidth = points[i + 1][0] - points[i][0];
             }
-            if (open < max) backtrack(list, str + "(", open + 1, close, max);
-            if (close < open) backtrack(list, str + ")", open, close + 1, max);
+            return maxWidth;
+        }
+    }
+    public class MyComparer : IComparer<int[]>
+    {
+        int IComparer<int[]>.Compare(int[] p1, int[] p2)
+        {
+            return p1[0] - p2[0];
         }
     }
 }
