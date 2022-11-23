@@ -14,20 +14,40 @@ namespace LeetCode
     }
     public static class Solution
     {
-        public static int[][] Insert(int[][] intervals, int[] newInterval)
+        public static IList<int> LargestDivisibleSubset(int[] nums)
         {
-            List<int[]> processed = new List<int[]>();
-            int i = 0;
-            while (i < intervals.Length && intervals[i][1] < newInterval[0])
-                processed.Add(intervals[i++]);
-            while (i < intervals.Length && intervals[i][0] <= newInterval[1])
+            int[] l = new int[nums.Length];
+            int[] prev = new int[nums.Length]; // the previous index of element i in the largestDivisibleSubset ends with element i
+
+            Array.Sort(nums);
+
+            int max = 0;
+            int index = -1;
+            for (int i = 0; i < nums.Length; i++)
             {
-                newInterval = new int[] { Math.Min(newInterval[0], intervals[i][0]), Math.Max(newInterval[1], intervals[i][1]) };
-                i++;
+                l[i] = 1;
+                prev[i] = -1;
+                for (int j = i - 1; j >= 0; j--)
+                {
+                    if (nums[i] % nums[j] == 0 && l[j] + 1 > l[i]) //почему не break? потому что могут попасться число может делиться и на другие числа
+                    {
+                        l[i] = l[j] + 1;
+                        prev[i] = j;
+                    }
+                }
+                if (l[i] > max)
+                {
+                    max = l[i];
+                    index = i;
+                }
             }
-            processed.Add(newInterval);
-            while (i < intervals.Length) processed.Add(intervals[i++]);
-            return processed.ToArray();
+            List<int> res = new List<int>();
+            while (index != -1)
+            {
+                res.Add(nums[index]);
+                index = prev[index];
+            }
+            return res;
         }
     }
 }
