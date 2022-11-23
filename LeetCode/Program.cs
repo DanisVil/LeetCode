@@ -14,40 +14,25 @@ namespace LeetCode
     }
     public static class Solution
     {
-        public static IList<int> LargestDivisibleSubset(int[] nums)
+        public static int MinimumDeletions(string s)
         {
-            int[] l = new int[nums.Length];
-            int[] prev = new int[nums.Length]; // the previous index of element i in the largestDivisibleSubset ends with element i
-
-            Array.Sort(nums);
-
-            int max = 0;
-            int index = -1;
-            for (int i = 0; i < nums.Length; i++)
+            int n = s.Length;
+            int[] a = new int[n], b = new int[n];
+            int c = 0;
+            for (int i = 0; i < n; i++)
             {
-                l[i] = 1;
-                prev[i] = -1;
-                for (int j = i - 1; j >= 0; j--)
-                {
-                    if (nums[i] % nums[j] == 0 && l[j] + 1 > l[i]) //почему не break? потому что могут попасться число может делиться и на другие числа
-                    {
-                        l[i] = l[j] + 1;
-                        prev[i] = j;
-                    }
-                }
-                if (l[i] > max)
-                {
-                    max = l[i];
-                    index = i;
-                }
+                b[i] = c;
+                if (s[i] == 'b') c++;
             }
-            List<int> res = new List<int>();
-            while (index != -1)
+            c = 0;
+            for (int i = n - 1; i >= 0; i--)
             {
-                res.Add(nums[index]);
-                index = prev[index];
+                a[i] = c;
+                if (s[i] == 'a') c++;
             }
-            return res;
+            int ans = n;
+            for (int i = 0; i < n; i++) ans = Math.Min(ans, a[i] + b[i]);
+            return ans;
         }
     }
 }
